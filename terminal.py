@@ -108,6 +108,7 @@ def get_args():
     parser.add_argument('--stop', type=str, default='\n')
     parser.add_argument('--engine', type=str, default='davinci')
     parser.add_argument('--log', type=str, default='log.txt')
+    parser.add_argument('--loop', type=bool, default=False)
     args = parser.parse_args()
     return args
 
@@ -122,8 +123,15 @@ def log(log_data):
 
 def __main__():
     argparse = get_args()
-    response = get_response(argparse.prompt, get_api_key(), argparse.max_tokens, argparse.temperature, argparse.top_p, argparse.n, argparse.stream, argparse.logprobs, argparse.stop, argparse.engine)
-    log("{0}:-:{1}\n".format(argparse.prompt, response))
+    if argparse.loop:
+        while input("Type 'exit' to quit:" ) != "exit":
+            response = get_response(argparse.prompt, get_api_key(), argparse.max_tokens, argparse.temperature, argparse.top_p, argparse.n, argparse.stream, argparse.logprobs, argparse.stop, argparse.engine)
+            log("{0}:-:{1}\n".format(argparse.prompt, response))
+            print(response)
+    else:
+        response = get_response(argparse.prompt, get_api_key(), argparse.max_tokens, argparse.temperature, argparse.top_p, argparse.n, argparse.stream, argparse.logprobs, argparse.stop, argparse.engine)
+        log("{0}:-:{1}\n".format(argparse.prompt, response))
+        print(response)
 
 if __name__ == '__main__':
     __main__()
